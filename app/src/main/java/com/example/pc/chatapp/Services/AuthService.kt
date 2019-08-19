@@ -1,6 +1,5 @@
 package com.example.pc.chatapp.Services
 
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.support.v4.content.LocalBroadcastManager
@@ -8,20 +7,20 @@ import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.*
-import com.android.volley.toolbox.Volley
 import com.example.pc.chatapp.Controller.App
+import com.example.pc.chatapp.Controller.MainActivity
 import com.example.pc.chatapp.Utilities.*
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.reflect.Method
 
 object AuthService {
 
     /*var isLogged=false
     var userEmail=""
     var authToken=""*/
+    //make them prefrences
 
-    fun register(context:Context,email:String,password:String,complete:(Boolean)->Unit)
+    fun register(email:String,password:String,complete:(Boolean)->Unit)
     {
         val url=URL_REGISTER
         val jsonBody=JSONObject()
@@ -46,11 +45,11 @@ object AuthService {
             }
         }//req return string
 
-        Volley.newRequestQueue(context).add(registerRequest)
+        App.sharedPrefs.requestQueue.add(registerRequest)
 
     }
 
-    fun login(context: Context, email: String, password: String,complete: (Boolean) -> Unit)
+    fun login( email: String, password: String,complete: (Boolean) -> Unit)
     {
         val url= URL_LOgin
         val jsonBody=JSONObject()
@@ -84,11 +83,11 @@ object AuthService {
             }
         } //return json responce
 
-        Volley.newRequestQueue(context).add(loginRequest)
+        App.sharedPrefs.requestQueue.add(loginRequest)
 
     }
 
-    fun createUser(context: Context,name: String,email: String,avatarName:String,avatarColor:String, complete: (Boolean) -> Unit)
+    fun createUser(name: String,email: String,avatarName:String,avatarColor:String, complete: (Boolean) -> Unit)
     {
         val jsonBody=JSONObject()
         jsonBody.put("name",name)
@@ -147,7 +146,10 @@ object AuthService {
                 UserDataService.id=response.getString("_id")
                 UserDataService.name=response.getString("name")
 
+                val userDataChanged=Intent(BROAD_CAST_USER_DATE_CHANGE)
+                LocalBroadcastManager.getInstance(context).sendBroadcast(userDataChanged)
 
+                //......
                 complete(true)
             }catch (e:JSONException)
             {

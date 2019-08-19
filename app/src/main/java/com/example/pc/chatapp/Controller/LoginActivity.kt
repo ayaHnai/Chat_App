@@ -1,6 +1,7 @@
 package com.example.pc.chatapp.Controller
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
@@ -22,17 +23,19 @@ class LoginActivity : AppCompatActivity() {
 
     fun btnLoginClicked(view: View)
     {
+
         enableSpinner(true)
         val email=txtEmailLogin.text.toString()
         val pass=txtPassLogin.text.toString()
         if(email.isNotEmpty()&&pass.isNotEmpty()) {
-            AuthService.login(this, email, pass) { loginSuccess ->
+            AuthService.login( email, pass) { loginSuccess ->
                 if (loginSuccess) {
                     AuthService.findUserByEmail(this) { findSuccess ->
                         if (findSuccess) {
-                            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(BROAD_CAST_USER_DATE_CHANGE))
                             enableSpinner(false)
+
                             finish()
+
                         } else showError()
                     }
                 } else showError()

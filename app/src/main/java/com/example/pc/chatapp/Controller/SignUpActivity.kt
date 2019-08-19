@@ -50,13 +50,13 @@ class SignUpActivity : AppCompatActivity() {
         val password=txtPassSignUp.text.toString()
         val userName=txtNameSignUp.text.toString()
         if(userName.isNotEmpty()&& password.isNotEmpty()&& email.isNotEmpty()) {
-            AuthService.register(this, email, password) { registerSuccess ->
+            AuthService.register( email, password) { registerSuccess ->
                 if (registerSuccess) {
-                    AuthService.login(this, email, password)
+                    AuthService.login( email, password)
                     { loginSuccess ->
 
                         if (loginSuccess) {
-                            AuthService.createUser(this, userName, email, userAvatar, avatarColor) { createSuccess ->
+                            AuthService.createUser( userName, email, userAvatar, avatarColor) { createSuccess ->
                                 if (createSuccess) {
                                     println("user created  ................................ $avatarColor")
                                     LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(BROAD_CAST_USER_DATE_CHANGE))
